@@ -5,6 +5,7 @@ namespace App\Repositories;
 use App\Http\Requests\UserRequest;
 use App\Models\Address;
 use App\Models\User;
+use Illuminate\Support\Facades\Hash;
 
 class UserRepository implements UserRepositoryInterface
 {
@@ -17,13 +18,17 @@ class UserRepository implements UserRepositoryInterface
 
     public function list()
     {
-        return $this->eloquent->all();
+        $user = $this->eloquent;
+        $search = request('search');
+
+        $user = $user->select('*')->where('name', 'LIKE', $search.'%');
+        
+        return $user->get();
     }
 
     public function findById($id)
     {
-        $user = $this->eloquent->find($id)
-                    ->only('name', 'email', 'type'); 
+        $user = $this->eloquent->find($id); 
         return $user;
     }
 
@@ -33,9 +38,11 @@ class UserRepository implements UserRepositoryInterface
         $address = $this->address;
         $nonAdmin = 'user';
 
+        $password = Hash::make(request('password'));
+
         $user->name = request('name');
         $user->email = request('email');
-        $user->password = request('password');
+        $user->password = $password;
         $user->type = $nonAdmin;
         
         $address->state = request('state');
@@ -52,9 +59,11 @@ class UserRepository implements UserRepositoryInterface
         $user = $this->eloquent;
         $address = $this->address;
 
+        $password = Hash::make(request('password'));
+
         $user->name = request('name');
         $user->email = request('email');
-        $user->password = request('password');
+        $user->password = $password;
         $user->type = request('type');
         
         $address->state = request('state');
@@ -71,9 +80,11 @@ class UserRepository implements UserRepositoryInterface
         $user = $this->eloquent->find($id);
         if(!$user) return;
         
+        $password = Hash::make(request('password'));
+
         $user->name = request('name');
         $user->email = request('email');
-        $user->password = request('password');
+        $user->password = $password;
 
         $address = $user->address->first();
         $address->state = request('state');
@@ -88,10 +99,12 @@ class UserRepository implements UserRepositoryInterface
     {
         $user = $this->eloquent->find($id);
         if(!$user) return;
+       
+        $password = Hash::make(request('password'));
         
         $user->name = request('name');
         $user->email = request('email');
-        $user->password = request('password');
+        $user->password = $password;
         $user->type = request('type');
 
         $address = $user->address->first();

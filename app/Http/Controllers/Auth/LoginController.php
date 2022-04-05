@@ -51,7 +51,7 @@ class LoginController extends Controller
         $credentials = request()->only('email', 'password'); 
 
         if(!Auth::attempt($credentials)) {
-            return view('welcome');
+            return redirect('home');
         }
         
         return redirect('home');

@@ -9,7 +9,7 @@
         @include('layouts.main.header')
     </header>
     
-    <main>        
+    <main style="height: 100vh">
         <div id="app">
             @yield('content')
         </div>
@@ -21,7 +21,9 @@
 
     
     @stack('start-scripts')
-    <script src="{{ asset('/js/app.js') }}"></script>
+        <script src="{{ asset('/js/app.js') }}"></script>
     @stack('final-scripts')
+    
+    @stack('script')
 </body>
 </html>

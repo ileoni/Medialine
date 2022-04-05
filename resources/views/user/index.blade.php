@@ -14,6 +14,6 @@
                 </div>
             </div>
         </div>
-        @include('product.table')
+        @include('user.table')
     </div>
 @endsection

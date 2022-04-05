@@ -15,23 +15,17 @@ class UserController extends Controller
         // $this->middleware('auth', ['except' => ['store']]);
     }
 
+    public function index()
+    {
+        $user = $this->user->list();
+        return view('user.index', ['users' => $user]);
+    }
+
     public function create()
     {
-        // if(!Gate::allows('admin'))
-        // {
-        //     return response()->json('erro', 403);
-        // }
-
-        $user = $this->user->list();
-        return view('user.create', ['users' => $user]);
+        return view('user.create');
     }
-
-    public function findById($id)
-    {
-        $user = $this->user->findById($id);
-        return response()->json($user, 200);
-    }
-
+    
     public function store(UserRequest $request)
     {
         $this->user->store();
@@ -46,9 +40,21 @@ class UserController extends Controller
         }
 
         $this->user->storeAdmin();
-        return response()->json('success', 200);
+        return redirect('/usuario');
     }
     
+    public function findById($id)
+    {
+        $user = $this->user->findById($id);
+        return response()->json($user, 200);
+    }
+    
+    public function edit($id)
+    {
+        $user = $this->user->findById($id);
+        return view('user.edit', ['user' => $user]);
+    }
+
     public function update(UserRequest $request, $id)
     {
         $this->user->update($id);
@@ -62,12 +68,12 @@ class UserController extends Controller
             return response()->json('erro', 403);
         }
         $this->user->updateAdmin($id);
-        return response()->json('success', 200);
+        return redirect('/usuario');
     }
     
     public function destroy($id)
     {
         $this->user->destroy($id);
-        return response()->json('success', 200);
+        return redirect('/usuario');
     }
 }

@@ -3,6 +3,7 @@
 namespace App\Repositories;
 
 use App\Models\Product;
+use Intervention\Image\ImageManager;
 
 class ProductRepository implements ProductRepositoryInterface
 {
@@ -13,7 +14,12 @@ class ProductRepository implements ProductRepositoryInterface
 
     public function list()
     {
-        return $this->eloquent->all();
+        $product = $this->eloquent;
+        $search = request('search');
+
+        $product = $product->select('*')->where('name', 'like', $search.'%');
+
+        return $product->get();
     }
 
     public function findById($id)
@@ -22,17 +28,28 @@ class ProductRepository implements ProductRepositoryInterface
         
         if(!$user) return; 
 
-        return $user->only('name', 'description', 'price');        
+        return $user;
     }
 
     public function uploadFile($image)
     {
         $name = time() . '.' . $image->extension();
         $path = "/images/" . $name;
+
+        if(!is_dir('images')) {
+            mkdir(public_path('images\thumbnail'), 0777, true);
+            mkdir(public_path('images\small'), 0777, true);
+        }
+
+        $manage = new ImageManager(['drive' => 'imagick']);
+        
+        $manage->make($image->getRealPath())->resize(100, 75)->save('images/thumbnail/'.$name);
+
+        $manage->make($image->getRealPath())->resize(240, 188)->save('images/small/'.$name);
         
         $image->move(public_path('images'), $name);
-    
-        return $path;
+        
+        return $name;
     }
 
     public function store()

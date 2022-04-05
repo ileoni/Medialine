@@ -1,10 +1,10 @@
-@extends('layouts.default-auth')
+@extends('layouts.default')
 
 @section('content')
     <div class="container">
         <div class="d-flex justify-content-center">
             <div class="col-sm-6">
-                <div class="card border-white mt-5 shadow-sm rounded">
+                <div class="card border-white shadow-sm rounded">
                     <div class="card-header bg-white text-center font-weight-bold">
                         Login
                     </div>

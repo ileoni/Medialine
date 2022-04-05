@@ -11,13 +11,19 @@ class ProductController extends Controller
     private $product;
     public function __construct(ProductRepository $product) {
         $this->product = $product;
-        $this->middleware('auth', ['except' => ['create', 'findById']]);
+        $this->middleware('auth', ['except' => ['create', 'findById', 'show', 'destroy', 'store']]);
     }
     
     public function create()
     {
         $product = $this->product->list();
         return view('product.create', ['products' => $product]);
+    }
+
+    public function show($id)
+    {
+        $product = $this->product->findById($id);
+        return view('product.show', ['product' => $product]);
     }
 
     public function findById($id)
@@ -28,9 +34,9 @@ class ProductController extends Controller
 
     public function store(ProductRequest $request)
     {
-        if(!Gate::allows('admin')) {
-            return response()->json('error', 403);
-        }
+        // if(!Gate::allows('admin')) {
+        //     return response()->json('error', 403);
+        // }
 
         $this->product->store();
         return response()->json('success', 200);
@@ -48,9 +54,9 @@ class ProductController extends Controller
 
     public function destroy($id)
     {
-        if(!Gate::allows('admin')) {
-            return response()->json('error', 403);
-        }
+        // if(!Gate::allows('admin')) {
+        //     return response()->json('error', 403);
+        // }
         
         $this->product->destroy($id);
         return response()->json('success', 200);
