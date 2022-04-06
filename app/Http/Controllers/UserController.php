@@ -12,7 +12,7 @@ class UserController extends Controller
     private $user;
     public function __construct(UserRepository $user) {
         $this->user = $user;
-        // $this->middleware('auth', ['except' => ['store']]);
+        $this->middleware('auth', ['except' => ['create', 'store']]);
     }
 
     public function index()
@@ -23,57 +23,12 @@ class UserController extends Controller
 
     public function create()
     {
-        return view('user.create');
+        return view('auth.register');
     }
     
     public function store(UserRequest $request)
     {
         $this->user->store();
         return redirect('home');
-    }
-
-    public function storeAdmin(UserAdminRequest $request)
-    {
-        if(!Gate::allows('admin'))
-        {
-            return response()->json('erro', 403);
-        }
-
-        $this->user->storeAdmin();
-        return redirect('/usuario');
-    }
-    
-    public function findById($id)
-    {
-        $user = $this->user->findById($id);
-        return response()->json($user, 200);
-    }
-    
-    public function edit($id)
-    {
-        $user = $this->user->findById($id);
-        return view('user.edit', ['user' => $user]);
-    }
-
-    public function update(UserRequest $request, $id)
-    {
-        $this->user->update($id);
-        return response()->json('success', 200);
-    }
-
-    public function updateAdmin(UserAdminRequest $request, $id)
-    {
-        if(!Gate::allows('admin'))
-        {
-            return response()->json('erro', 403);
-        }
-        $this->user->updateAdmin($id);
-        return redirect('/usuario');
-    }
-    
-    public function destroy($id)
-    {
-        $this->user->destroy($id);
-        return redirect('/usuario');
     }
 }

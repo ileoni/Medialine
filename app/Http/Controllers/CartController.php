@@ -14,7 +14,7 @@ class CartController extends Controller
     public function __construct(OrderRepository $order, OrderItemRepository $orderItem) {
         $this->order = $order;
         $this->orderItem = $orderItem;
-        $this->middleware('auth', ['except' => ['addItem']]);
+        $this->middleware('auth');
     }
 
     public function addItem(Request $request)

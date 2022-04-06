@@ -13,10 +13,14 @@
         @forelse ($cart as $item)
             <tr>
                 <td class="align-middle">
-                    @if (!$item['path'])
-                        {{$loop->index}}
+                    @if (!$item['images'][0]['thumbnail'])
+                        <div class="bg-dark" style="height: 5rem;">
+                            <div class="text-center">
+                                <i class="bi bi-card-image text-white" style="font-size: 4em"></i>
+                            </div>
+                        </div>
                     @else
-                        <img src="{{'/images/thumbnail/'.$item['path']}}" alt="">
+                        <img src="/{{$item['images'][0]['thumbnail']}}" alt="">
                     @endif
                 </td>
                 <td class="align-middle">

@@ -3,7 +3,7 @@
 @section('content')
 
     <div class="container">
-        <form method="POST" action="{{ route('product.store') }}" enctype="multipart/form-data">
+        <form method="POST" action="{{ route('product.update', ['id' => $product->id]) }}" enctype="multipart/form-data">
             @csrf
     
             @include('product.form')

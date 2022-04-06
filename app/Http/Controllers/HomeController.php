@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Repositories\ProductRepository;
 use Illuminate\Support\Facades\Auth;
+use League\CommonMark\Inline\Renderer\ImageRenderer;
 
 class HomeController extends Controller
 {

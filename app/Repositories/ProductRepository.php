@@ -2,14 +2,19 @@
 
 namespace App\Repositories;
 
+use App\Models\Image;
 use App\Models\Product;
+use Illuminate\Http\Request;
+use Illuminate\Http\UploadedFile;
 use Intervention\Image\ImageManager;
 
 class ProductRepository implements ProductRepositoryInterface
 {
     private $eloquent;
-    public function __construct(Product $eloquent) {
+    private $eloquentImage;
+    public function __construct(Product $eloquent, Image $eloquentImage) {
         $this->eloquent = $eloquent;
+        $this->eloquentImage = $eloquentImage;
     }
 
     public function list()
@@ -31,70 +36,118 @@ class ProductRepository implements ProductRepositoryInterface
         return $user;
     }
 
-    public function uploadFile($image)
+    public function pathImage($image)
     {
-        $name = time() . '.' . $image->extension();
-        $path = "/images/" . $name;
+        $images = $this->eloquentImage;
 
-        if(!is_dir('images')) {
-            mkdir(public_path('images\thumbnail'), 0777, true);
-            mkdir(public_path('images\small'), 0777, true);
+        if($image) $name = time() . '.' . $image->extension();
+        
+        $images->default = ($image) ? 'imgs/'.$name : "";
+        $images->small = ($image) ? 'imgs/small/'.$name : "";
+        $images->thumbnail = ($image) ? 'imgs/thumbnail/'.$name : "";
+
+        return $this;
+    }
+
+    public function uploadImage()
+    {
+        $image = request('image');
+        $imagePath = $this->eloquentImage;
+        
+        if(!$image) return $imagePath;
+
+        if(!is_dir('imgs')) {
+            mkdir(public_path('imgs\thumbnail'), 0777, true);
+            mkdir(public_path('imgs\small'), 0777, true);
         }
-
+        
         $manage = new ImageManager(['drive' => 'imagick']);
-        
-        $manage->make($image->getRealPath())->resize(100, 75)->save('images/thumbnail/'.$name);
+        $manage->make($image->getRealPath())->widen(100)->save($imagePath->thumbnail);
+        $manage->make($image->getRealPath())->widen(240)->save($imagePath->small);
+        $manage->make($image->getRealPath())->widen(400)->save($imagePath->default);
 
-        $manage->make($image->getRealPath())->resize(240, 188)->save('images/small/'.$name);
-        
-        $image->move(public_path('images'), $name);
-        
-        return $name;
+        return $imagePath;
+    }
+
+    public function removeImage($path)
+    {
+        if($path->default != "") {
+            unlink($path->default);
+            unlink($path->small);
+            unlink($path->thumbnail);
+        }
     }
 
     public function store()
     {
         $product = $this->eloquent;
+        $images = $this->eloquentImage;
 
         $product->name = request('name');
         $product->description = request('description');
         $product->price = request('price');
         $product->amount = request('amount');
         
-        $path = (request('image') != null) ? $this->uploadFile(request('image')): "";
-        $product->path = $path;
-        
+        $image = request('image');
+        $paths = $this->pathImage($image)->uploadImage();
+
+        $images->default = $paths->default;
+        $images->small = $paths->small;
+        $images->thumbnail = $paths->thumbnail;
+
         $product->save();
+        $product->images()->save($images);
     }
 
     public function update($id)
     {
         $product = $this->eloquent->find($id);
+        $imagePaths = $product->images;
 
-        if(!$product) return;
         
         $product->name = request('name');
         $product->description = request('description');
         $product->price = request('price');
         $product->amount = request('amount');
-
-        $oldPath = ($product->path != "") ? base_path('public') . $product->path: null;
-        $path = (request('image') != null) ? $this->uploadFile(request('image')): "";
-
-        $product->path = $path;
         
-        $product->update();
-        if(!!$oldPath) unlink($oldPath);
+        $image = request('image');
+        
+        $paths = $this->pathImage($image)->uploadImage();
+                
+        $images = $product->images->first();
+        
+        if($images->default != "")
+        {
+            unlink($images->default);
+            unlink($images->small);
+            unlink($images->thumbnail);
+        }
+
+        if($image) 
+        {
+            $images->default = $paths->default;
+            $images->small = $paths->small;
+            $images->thumbnail = $paths->thumbnail;
+        }
+       
+        $product->push();
     }
 
     public function destroy($id)
     {
         $product = $this->eloquent->find($id);
-        $oldPath = ($product->path != "") ? base_path('public') . $product->path: null;
+        $imagePaths = $product->images;
 
         if(!$product) return;
-        
+
+        $path = $imagePaths->first();
+
+        if($path->default != "") {
+            unlink($path->default);
+            unlink($path->small);
+            unlink($path->thumbnail);
+        }
+
         $product->delete();
-        if(!!$oldPath) unlink($oldPath);
     }
 }

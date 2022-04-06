@@ -9,17 +9,17 @@
         @include('layouts.main.header')
     </header>
     
-    <main style="height: 100vh">
+    <main>
         <div id="app">
             @yield('content')
         </div>
-    </main>
-    
-    <footer>
+    </main> 
+
+    <footer class="fixed-bottom">
         @include('layouts.main.footer')
     </footer>    
 
-    
+
     @stack('start-scripts')
         <script src="{{ asset('/js/app.js') }}"></script>
     @stack('final-scripts')

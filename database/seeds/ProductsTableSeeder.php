@@ -13,8 +13,8 @@ class ProductsTableSeeder extends Seeder
     public function run()
     {
         DB::insert(
-            'insert into products (id, name, description, path, price, amount) values (?, ?, ?, ?, ?, ?)',
-            [1, 'Caneca', 'Caneca legal ...', '', 30.00, 20]
+            'insert into products (id, name, description, price, amount) values (?, ?, ?, ?, ?)',
+            [1, 'Caneca', 'Caneca legal ...', 30.00, 20]
         );
     }
 }

@@ -1,5 +1,5 @@
-<div class="fixed-bottom bg-dark pt-2">
-    <p class="text-center text-white">
+<div class="bg-dark">
+    <p class="text-center text-white m-0">
         Desenvolvido por Igor.
     </p>
 </div>

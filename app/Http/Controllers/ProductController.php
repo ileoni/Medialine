@@ -11,35 +11,34 @@ class ProductController extends Controller
     private $product;
     public function __construct(ProductRepository $product) {
         $this->product = $product;
-        $this->middleware('auth', ['except' => ['create', 'findById', 'show', 'destroy', 'store']]);
+        $this->middleware('auth');
     }
     
-    public function create()
+    public function index()
     {
         $product = $this->product->list();
-        return view('product.create', ['products' => $product]);
+        return view('product.index', ['products' => $product]);
     }
 
-    public function show($id)
+    public function create()
     {
-        $product = $this->product->findById($id);
-        return view('product.show', ['product' => $product]);
+        return view('product.create');
     }
-
-    public function findById($id)
-    {
-        $product = $this->product->findById($id);
-        return response()->json($product, 200);
-    }
-
+    
     public function store(ProductRequest $request)
     {
-        // if(!Gate::allows('admin')) {
-        //     return response()->json('error', 403);
-        // }
+        if(!Gate::allows('admin')) {
+            return response()->json('error', 403);
+        }
 
-        $this->product->store();
-        return response()->json('success', 200);
+        $this->product->store($request);
+        return redirect('/produto');
+    }
+
+    public function edit($id)
+    {
+        $product = $this->product->findById($id);
+        return view('product.edit', ['product' => $product]);
     }
 
     public function update(ProductRequest $request, $id)
@@ -49,16 +48,16 @@ class ProductController extends Controller
         }
 
         $this->product->update($id);
-        return response()->json('success', 200);
+        return redirect('/produto');
     }
 
     public function destroy($id)
     {
-        // if(!Gate::allows('admin')) {
-        //     return response()->json('error', 403);
-        // }
+        if(!Gate::allows('admin')) {
+            return response()->json('error', 403);
+        }
         
         $this->product->destroy($id);
-        return response()->json('success', 200);
+        return redirect('/produto');
     }
 }

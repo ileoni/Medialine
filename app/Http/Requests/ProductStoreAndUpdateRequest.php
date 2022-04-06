@@ -11,8 +11,8 @@ class ProductStoreAndUpdateRequest extends FormRequest
         return [
             'name' => 'required',
             'description' => 'required',
-            'image' => 'mimes:png,jpeg',
-            'price' => 'required|regex:/^[\d]{1,6}[.][\d]{2}$/i',
+            // 'image' => 'mimes:png,jpeg',
+            'price' => 'required',
             'amount' => 'required|numeric',
         ];
     } 
@@ -23,7 +23,7 @@ class ProductStoreAndUpdateRequest extends FormRequest
             'required' => 'O campo :Attribute é obrigatório.',
             'numeric' => 'A :Attribute deve ser um número.',
             'price.regex' => 'A :Attribute inválido, :attribute deve ter somente numeros',
-            'image.mimes' => 'A :Attribute deve ser do tipo: :values',
+            // 'image.mimes' => 'A :Attribute deve ser do tipo: :values',
         ];
     }
 

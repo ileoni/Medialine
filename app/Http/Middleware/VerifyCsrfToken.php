@@ -15,6 +15,7 @@ class VerifyCsrfToken extends Middleware
         '/entrar',
         '/usuario/*',
         '/produto/*',
-        '/pedidos/*'
+        '/pedidos/*',
+        '/salvar/*'
     ];
 }
