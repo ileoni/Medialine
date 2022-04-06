@@ -25,6 +25,4 @@ Route::post('/produto/{id}/remover', ['as' => 'product.destroy', 'uses' => 'Prod
 
 Route::get('/carrinho/pedidos', ['as' => 'cart', 'uses' => 'CartController@create']);
 Route::get('/remover/item/{id}', ['as' => 'destroy.item', 'uses' => 'CartController@destroyItem']);
-
-Route::get('/pedidos', ['as' => 'order.index', 'uses' => 'CartController@index']);
 Route::post('/pedidos/salvar', ['as' => 'order.store', 'uses' => 'CartController@store']);

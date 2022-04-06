@@ -47,7 +47,7 @@
                                             <form method="post" action="{{route('order.store')}}">
                                                 <input type="text" name="id" value="{{$product->id}}" hidden>
                                                 <input type="text" name="price" value="{{$product->price}}" hidden>
-                                                <button type="submit">click</button>
+                                                <button class="btn btn-primary" type="submit">Adicionar ao Carrinho</button>
                                             </form>
                                         </div>
                                     </div>

@@ -29,13 +29,6 @@ class CartController extends Controller
         return view('cart.create', ['total' => $total]);
     }
 
-    public function index()
-    {
-        $order = $this->order->list();
-        $orderItem = $this->orderItem->list();
-        return response()->json([$order, $orderItem], 200);
-    }
-
     public function store()
     {
         $this->order->store();

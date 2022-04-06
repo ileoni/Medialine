@@ -16,12 +16,16 @@ class ProductController extends Controller
     
     public function index()
     {
+        if(!Gate::allows('admin')) return redirect('home');
+
         $product = $this->product->list();
         return view('product.index', ['products' => $product]);
     }
 
     public function create()
     {
+        if(!Gate::allows('admin')) return redirect('home');
+
         return view('product.create');
     }
     
@@ -37,6 +41,8 @@ class ProductController extends Controller
 
     public function edit($id)
     {
+        if(!Gate::allows('admin')) return redirect('home');
+        
         $product = $this->product->findById($id);
         return view('product.edit', ['product' => $product]);
     }

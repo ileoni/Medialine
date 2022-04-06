@@ -17,12 +17,12 @@ class UsersTableSeeder extends Seeder
                 [
                     'id' => 1,
                     'name' => 'Igor Leoni Pereira Machado',
-                    'email' => 'higorleonii@gmail.com',
+                    'email' => 'igorleonii@gmail.com',
                     'password' => '$2a$12$h35TiGl.Ogt.a51nLYWIUOW5FEzQJQP6CbpVrSA6c/18J99l0Ty3q',
                     'type' => 'admin'
                 ],[
                     'id' => 2,
-                    'name' => 'Mauricio',
+                    'name' => 'Mauricio Assumpcao',
                     'email' => 'mau@gmail.com',
                     'password' => '$2a$12$h35TiGl.Ogt.a51nLYWIUOW5FEzQJQP6CbpVrSA6c/18J99l0Ty3q',
                     'type' => 'user'

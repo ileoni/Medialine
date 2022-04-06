@@ -18,12 +18,16 @@ class UserController extends Controller
 
     public function index()
     {
+        if(!Gate::allows('admin')) return redirect('home');
+        
         $user = $this->user->list();
         return view('user.index', ['users' => $user]);
     }
 
     public function create()
     {
+        if(!Gate::allows('admin') && Auth::check()) return redirect('home');
+
         return view('auth.register');
     }
     
