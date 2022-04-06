@@ -44,11 +44,11 @@
                                             </p>
                                         </div>
                                         <div class="card-action">
-                                            <div class="text-right">
-                                                <button class="btn btn-primary font-weight-bold" onclick="addItem({{$product}})">
-                                                    adicionar
-                                                </button>
-                                            </div>
+                                            <form method="post" action="{{route('order.store')}}">
+                                                <input type="text" name="id" value="{{$product->id}}" hidden>
+                                                <input type="text" name="price" value="{{$product->price}}" hidden>
+                                                <button type="submit">click</button>
+                                            </form>
                                         </div>
                                     </div>
                             </div>
@@ -64,27 +64,3 @@
     </div>
 </div>
 @endsection
-
-@push('script')
-    <script>
-        $.ajaxSetup({
-            headers: {
-                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-            }
-        })
-
-        function addItem(product)
-        {
-            $.ajax({
-                url: "{{ route('add.item') }}",
-                type: "get",
-                data: {
-                    cart: product
-                },
-                success: function(res) {
-                    console.log(res)
-                }
-            });
-        }
-    </script>
-@endpush

@@ -10,30 +10,22 @@
         </tr>
     </thead>
     <tbody>
-        @forelse ($cart as $item)
+        @foreach (Auth::user()->order_items as $orderItems)
             <tr>
                 <td class="align-middle">
-                    @if (!$item['images'][0]['thumbnail'])
-                        <div class="bg-dark" style="height: 5rem;">
-                            <div class="text-center">
-                                <i class="bi bi-card-image text-white" style="font-size: 4em"></i>
-                            </div>
-                        </div>
-                    @else
-                        <img src="/{{$item['images'][0]['thumbnail']}}" alt="">
-                    @endif
+                    <img src="/{{$orderItems->products['images'][0]['thumbnail']}}" alt="{{$orderItems->products['name']}}">
                 </td>
                 <td class="align-middle">
-                    {{$item["name"]}}
+                    {{$orderItems->products['name']}}
                 </td>
                 <td class="align-middle">
-                    {{$item["description"]}}
+                    {{$orderItems->products['description']}}
                 </td>
                 <td class="align-middle">
-                    {{$item["price"]}}
+                    {{$orderItems->products['price']}}
                 </td>
                 <td class="align-middle">
-                    {{$item["amount"]}}
+                    {{$orderItems->products['amount']}}
                 </td>
                 <td class="align-middle">
                     <a 
@@ -41,16 +33,12 @@
                         data-toggle="tooltip"
                         data-placement="right"
                         title="Remover" 
-                        href="{{route('destroy.item', ['indice' => $loop->index])}}"
+                        href="{{route('destroy.item', ['id' => $orderItems->id])}}"
                     >
                         <i class="bi bi-trash2" style="font-size: 1.5em"></i>
                     </a>
                 </td>
             </tr>
-        @empty
-            <td colspan=100%>
-                Não há itens no carrinho.
-            </td>
-        @endforelse
+        @endforeach
     </tbody>
 </table>

@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Http\Requests\UserStoreAndUpdateRequest as UserRequest;
 use App\Http\Requests\UserAdminStoreAndUpdateRequest as UserAdminRequest;
 use App\Repositories\UserRepository;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Gate;
 
 class UserController extends Controller

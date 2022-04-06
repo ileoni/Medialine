@@ -17,54 +17,35 @@ class CartController extends Controller
         $this->middleware('auth');
     }
 
-    public function addItem(Request $request)
-    {
-        $accurent = session()->get('cart');
-        
-        if($accurent != []) {
-            array_push($accurent, $request->get('cart'));
-
-            session()->put('cart', $accurent);
-            return response()->json([
-                'dentro',
-                $accurent
-            ], 200);
-        }
-
-        session()->put('cart', [$request->get('cart')]);
-        
-        return response()->json([
-            session()->get('cart')
-        ], 200);
-    }
-
-    public function destroyItem($index)
-    {
-        $accurent = session()->get('cart');
-        array_splice($accurent, $index, 1);
-        
-        session()->put('cart', $accurent);
-        return redirect('/carrinho/pedidos');
-    }
-
     public function create()
     {
-        $cart = session()->get('cart') ? session()->get('cart'): [];
+        $orderItem = $this->orderItem->list();
         $total = 0;
 
-        foreach($cart as $item) {
-            $total += $item['price'];
+        foreach ($orderItem as $item) {
+            $total += $item->price;
         }
-        
-        return view('cart.create', ['cart' => $cart, 'total' => $total]);
+
+        return view('cart.create', ['total' => $total]);
+    }
+
+    public function index()
+    {
+        $order = $this->order->list();
+        $orderItem = $this->orderItem->list();
+        return response()->json([$order, $orderItem], 200);
     }
 
     public function store()
     {
         $this->order->store();
-        $this->orderItem->store();
-        return response()->json([
-            'success'
-        ], 200);
+        return redirect('home');
     }
+    
+    public function destroyItem($id)
+    {
+        $this->orderItem->destroy($id);
+        return redirect('/carrinho/pedidos');
+    }
+
 }

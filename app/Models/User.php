@@ -9,7 +9,7 @@ class User extends Authenticatable
 {
     use Notifiable;
 
-    protected $with = ['address', 'orders'];
+    protected $with = ['address', 'orders', 'order_items'];
     /**
      * The attributes that are mass assignable.
      *
@@ -36,5 +36,10 @@ class User extends Authenticatable
     public function orders()
     {
         return $this->hasMany('App\Models\Order', 'user_id', 'id');
+    }
+    
+    public function order_items()
+    {
+        return $this->hasManyThrough('App\Models\OrderItem', 'App\Models\Order');
     }
 }

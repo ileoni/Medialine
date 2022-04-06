@@ -27,4 +27,12 @@ class OrderItemRepository implements OrderItemRepositoryInterface
 
         $orderItem->save();
     }
+
+    public function destroy($id)
+    {
+        $orderItem = $this->eloquent->find($id);
+        if(!$orderItem) return;
+
+        $orderItem->delete();
+    }
 }
